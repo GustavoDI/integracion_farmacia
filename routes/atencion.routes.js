@@ -3,7 +3,7 @@ const router = Router();
 const {check, body}= require('express-validator');
 
 
-const {pacienteGet, pacientePut, pacienteoPost, pacienteDelete}= require ('../controllers/atencion.controller');
+const {pacienteGet, pacientePut, pacienteoPost, pacienteDelete, pacienteGetAll}= require ('../controllers/atencion.controller');
 const {validarCampos} = require('../middlewares/validar-campos')
 // router.get('/',  (req, res)=> {
 //     // res.send('Buena cabros Tenemos casi ready el rest server de farmacia');
@@ -19,6 +19,7 @@ const {validarCampos} = require('../middlewares/validar-campos')
 // });
 
 router.get('/', pacienteGet);
+router.get('/all', pacienteGetAll);
 
 router.post('/',[
     body('nombre', 'El nombre es obligatorio').not().isEmpty().isLength({min:3}),
