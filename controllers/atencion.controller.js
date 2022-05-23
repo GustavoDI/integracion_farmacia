@@ -17,6 +17,21 @@ const pacienteGet = (req = request, res = response) => {
     // connection.end(); 
 
 }
+const pacienteGetAll = (req = request, res = response) => {
+    connection.query('SELECT * FROM persona', (error, results, fields) => {
+        if (error) {
+            console.log({ error });
+        }
+        if (results) {
+
+            return res.json(results)
+        }
+        //   console.log({fields});
+    });
+    //la instruccion de termino de la conección genera error al realizar dos veces la consulta
+    // connection.end(); 
+
+}
 
 
 const pacienteoPost = (req = request, res = response) => {
@@ -28,35 +43,45 @@ const pacienteoPost = (req = request, res = response) => {
         telefono
     }
     
-    
     connection.query('SELECT * from test.persona WHERE email=?', email, (error, results, fields) => {
-        // if (error) throw error;
-        console.log('este es el error select');
+        
         if (error) {
-            return new error;
+            throw error;
         }
-
+        
         if (results[0]?.id_persona) {
+            console.log('este es el error select');
             return res.status(400).json({
                 msg: 'ya existe el usuario'
+            });
+            
+        }else{
+            connection.query('INSERT INTO test.persona SET ?', post, (error, results, fields) => {
+                if (error) {
+                    console.log('Controlando el error');
+                    console.log({ error });
+                }
+                if (results) {
+                    return res.json(results)
+                }
+                // connection.end();
             });
         }
         
 
     });
     
-    connection.query('INSERT INTO test.persona SET ?', post, (error, results, fields) => {
-        if (error) {
-            console.log('este es el error insert');
-            console.log({ error });
-        }
-        if (results) {
-            return res.json(results)
-        }
-        // connection.end();
-    })
+    // connection.query('INSERT INTO test.persona SET ?', post, (error, results, fields) => {
+    //     if (error) {
+    //         console.log('este es el error insert');
+    //         console.log({ error });
+    //     }
+    //     if (results) {
+    //         return res.json(results)
+    //     }
+    //     // connection.end();
+    // });
 }
-
 
 const pacientePut = (req = request, res = response) => {
     const id = req.params.id; //es el parametro que llega desde la petición
@@ -81,6 +106,7 @@ const pacientePut = (req = request, res = response) => {
         msg: 'Paciente Actualizado'
     })
 }
+
 const pacienteDeleteEver = (req = request, res = response) => {
     /**Capturar el id que viene desde desde la request */
     const id  = req.params.id;
@@ -99,6 +125,7 @@ const pacienteDeleteEver = (req = request, res = response) => {
         msg: 'Paciente borrado'
     })
 }
+
 const pacienteDelete = (req = request, res = response) => {
     /**Capturar el id que viene desde desde la request */
     const id  = req.params.id;
@@ -121,6 +148,7 @@ const pacienteDelete = (req = request, res = response) => {
 
 module.exports = {
     pacienteGet,
+    pacienteGetAll,
     pacientePut,
     pacienteoPost,
     pacienteDelete,
