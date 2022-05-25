@@ -50,7 +50,6 @@ const pacienteoPost = (req = request, res = response) => {
         }
         
         if (results[0]?.id_persona) {
-            console.log('este es el error select');
             return res.status(400).json({
                 msg: 'ya existe el usuario'
             });
@@ -92,7 +91,7 @@ const pacientePut = (req = request, res = response) => {
         email,
         telefono
     }
-    console.log(put);//mostrar por consola / show console
+    // console.log(put);//mostrar por consola / show console
     connection.query(`UPDATE test.persona SET ? WHERE id_persona = ${id}`, [put]), (error, results, fields) => {
         if (error) {
             console.log({ error });
@@ -107,6 +106,7 @@ const pacientePut = (req = request, res = response) => {
     })
 }
 
+/**Este controlar borra de manera permanente de la base de datos */
 const pacienteDeleteEver = (req = request, res = response) => {
     /**Capturar el id que viene desde desde la request */
     const id  = req.params.id;
@@ -126,6 +126,9 @@ const pacienteDeleteEver = (req = request, res = response) => {
     })
 }
 
+/**Este controlador cambia el estado del usuario a false para que no sea 
+ * visualizado en la obtención de la consulta 
+ */
 const pacienteDelete = (req = request, res = response) => {
     /**Capturar el id que viene desde desde la request */
     const id  = req.params.id;

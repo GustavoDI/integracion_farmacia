@@ -65,9 +65,10 @@
     <!-- Aqui va el codigo de las rutas -->
   } 
   Una vez creado el metodo dentro del debemos agregar el codigo para que sea utilizado 
-  <!-- req =  request / res = response -->
-
-          this.app.get('/api',  (req, res)=> {
+  
+routes () {
+   
+    this.app.get('/api',  (req, res)=> {
              <!-- Lo que primero sea puesto acá es lo que sera enviado como respuesta -->
               <!-- res.send(''); -->
               <!-- Envío de respuesta en formato json -->
@@ -75,6 +76,7 @@
                  msg: 'Algún mensaje'
              })
           });
+  } 
 
   Con el servidor arriba probar endpoint 
 6.- Escuchador 
@@ -115,13 +117,40 @@
 
 8.- Conexión a base datos (https://www.npmjs.com/package/mysql#install)
   en este caso utilizaremos Mysql npm i mysql 
+  Nos conectaremos siguiendo lo que la documentación nos indique.
+  Para ello en este caso separaremos la configuración de la BD  creando una carpeta que contenga la configuración de la conexion.
+  carpeta llamada database y dentro tendremos un archivo llamado config.db.js este contendra la conexión.
+  Finalmente debemos exportar el modulo para que pueda ser utilizado.
+  no es necesario requerir en el servidor debido que sera utilizado en el controlador.
+  
+9.- Modelos de datos, esta la posibilidad de crear directamente el modelo de datos desde el servidor, en este caso crearemos un tabla la que contendra información solo a modo de consulta.
 
-  [
-    body('nombre', 'El nombre es obligatorio').not().isEmpty().isLength({min:3}),
-    check('apellido', 'El apellido es obligatorio').not().isEmpty().isLength({min:3}),
-    body('email', 'El email no es valido').isEmail().trim().normalizeEmail(),
-    // check('email', custom(emailExiste))
-],
+CREATE DATABASE database_nombre;
 
+USE database_nombre;
 
+CREATE TABLE pacientes (
+    idpaciente int not null primary key auto_increment,
+    rut varchar(10),
+    nombre varchar(50),
+    apellidos varchar(50),
+    isdeleted bool
+);
 
+alter table pacientes
+    add primary key (idpaciente);
+
+Esto lo debemos agregar  en el script para de nuestra BD. 
+
+10.- Controlador, el cúal contiene la logica de lo que va realizar cada endpoint
+crear carpeta controller que tendra  cada metodo para su respectivo end-point 
+
+desde este punto en adelante dejaremos separa las rutas con el controlador y el las rutas agregaremos validaciones.
+los metodos contendran la logica y en las rutas tendremos validaciones con una herramienta llamada express-validator https://www.npmjs.com/package/express-validator o https://express-validator.github.io/docs/
+
+para el caso de validator utilizaremos el metodo body que recibe el campo a validar el cual debe coincidir con lo que viene desde los parametros validator tiene varias formas de validar 
+body('username').isEmail(), validando si es un emial.
+body('password').isLength({ min: 5 }), el largo del password 
+si se requiere alguna validación fuera de lo que tiene express deben ser creadas y se agregan al validador pero con el controlador.
+
+finalmente probar las api's y ver su uso.
