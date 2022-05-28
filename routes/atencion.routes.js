@@ -3,7 +3,7 @@ const router = Router();
 const {check, body}= require('express-validator');
 
 
-const {pacienteGet, pacientePut, pacienteoPost, pacienteDelete, pacienteGetAll}= require ('../controllers/atencion.controller');
+const {pacienteGet, pacientePut, pacienteoPost, pacienteDelete, pacienteGetAll, pacienteGetByID}= require ('../controllers/atencion.controller');
 const {validarCampos} = require('../middlewares/validar-campos')
 // router.get('/',  (req, res)=> {
 //     // res.send('Buena cabros Tenemos casi ready el rest server de farmacia');
@@ -18,17 +18,18 @@ const {validarCampos} = require('../middlewares/validar-campos')
 //     })
 // });
 
-router.get('/', pacienteGet);
-router.get('/all', pacienteGetAll);
+router.get('/active-users', pacienteGet);
+router.get('/active-users-id/:id', pacienteGetByID);
+router.get('/users', pacienteGetAll);
 
-router.post('/',[
+router.post('/user',[
     body('nombre', 'El nombre es obligatorio').not().isEmpty().isLength({min:3}),
     body('apellido', 'El apellido es obligatorio').not().isEmpty().isLength({min:3}),
     body('email', 'El email no es valido').isEmail(),
     validarCampos
 ],pacienteoPost);
 
-router.put('/actu/:id',[
+router.put('/user/:id',[
     body('nombre', 'El largo minimo es de tres').not().isEmpty().isLength({min:3}),
     body('apellido', 'El largo minimo es de 3').not().isEmpty().isLength({min:3}),
     body('email', 'El email debe ser valido').isEmail(),
@@ -36,7 +37,7 @@ router.put('/actu/:id',[
 ], pacientePut)
 
 /**Aqui deberia recibir el id del paciente /delete:id */
-router.delete('/delete/:id', pacienteDelete )
+router.delete('/delete/user/:id', pacienteDelete )
 
 router.get('*', (req, res) => {
     res.send('404 | Pagina no encontrada');
